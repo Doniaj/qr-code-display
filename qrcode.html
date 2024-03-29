@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservation Details/title>
+    <title>Reservation Details</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -68,15 +69,37 @@
         const urlParams = new URLSearchParams(window.location.search);
         const qrData = urlParams.get('data');
         
-        // Parse JSON data and display it in the table
+        // Parse JSON data and display it in the table with updated formatting
         if (qrData) {
             const eventData = JSON.parse(qrData);
             document.getElementById('eventName').innerText = eventData.eventName;
             document.getElementById('placesBooked').innerText = eventData.placesBooked;
             document.getElementById('eventLocation').innerText = eventData.eventLocation;
-            document.getElementById('eventDate').innerText = eventData.eventDate;
-            document.getElementById('beginTime').innerText = eventData.beginTime;
-            document.getElementById('endTime').innerText = eventData.endTime;
+
+            // Format date
+            const eventDate = new Date(eventData.eventDate);
+            const formattedDate = `${eventDate.getDate()} ${getMonthName(eventDate.getMonth())} ${eventDate.getFullYear()}`;
+            document.getElementById('eventDate').innerText = formattedDate;
+
+            // Format begin time and end time
+            const formattedBeginTime = formatTime(eventData.beginTime);
+            const formattedEndTime = formatTime(eventData.endTime);
+            document.getElementById('beginTime').innerText = formattedBeginTime;
+            document.getElementById('endTime').innerText = formattedEndTime;
+        }
+
+        // Function to format time (HH:MM AM/PM)
+        function formatTime(timeString) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = hours % 12 || 12; // Convert 0 to 12
+            return `${formattedHours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`;
+        }
+
+        // Function to get month name
+        function getMonthName(monthIndex) {
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return months[monthIndex];
         }
     </script>
 </body>
